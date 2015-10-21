@@ -1,4 +1,4 @@
-//localStorage工具类
+//localStorage工具类  还未完善..
 var Storage=function(){
 	if(!window.localStorage){
 		alert("您的浏览器不支持本地存储");
