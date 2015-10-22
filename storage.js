@@ -1,4 +1,4 @@
-//localStorage工具类  还未完善..
+//localStorage工具类
 var Storage=function(){
 	if(!window.localStorage){
 		alert("您的浏览器不支持本地存储");
@@ -71,6 +71,31 @@ Storage.prototype.get=function(key){
 		return JSON.parse(result);
 	}
 }
+
+//清除过期的数据
+Storage.prototype.clearOverdue=function(){
+	var nowTime=new Date().getTime(),tempObj,length;
+	//取出缓存的数据
+	var oldStr=this.storage.getItem(this.keyCache);
+	var oldMap=[];
+	var newMap=[];
+	console.log(oldStr);
+	if(!oldStr){
+		return;
+	}
+	oldMap=JSON.parse(oldStr);
+	for(var i=0,length=oldMap.length;i<length;i++){
+			tempObj=oldMap[i];
+			if(tempObj.timeout<nowTime){
+				this.storage.removeItem(tempObj.key);
+			}else{
+				newMap.push(tempObj);
+			}
+	}
+
+	this.storage.setItem(this.keyCache,JSON.stringify(newMap));
+	
+}
 //删除localStorage 键值
 Storage.prototype.remove=function(key){
 	this.storage.removeItem(key);
@@ -80,7 +105,7 @@ Storage.prototype.remove=function(key){
 Storage.prototype.clear=function(){
 	this.storage.clear();
 }
-
+//
 Storage.prototype.buildCache=function(value,inTime,timeout){
 	var storageObj={
 		value:value,
